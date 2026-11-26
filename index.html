@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="02Oj964R9EHMAEVJnVlCLZ">
-<head data-page-node-id="5L54DJYagUVsnpX1nqouru">
-<meta charset="UTF-8" data-page-node-id="ZNMR3m9uo0mvP6wVdwsKnh">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="TytbDCZdzsg8m4GVkg0DU7">
-<meta name="theme-color" content="#1E88E5" data-page-node-id="CTG7f9fGoQqpri0syuNgTF">
+<html lang="zh-CN" data-page-node-id="H5DkMWxkUFDFX7UWQmOAW6">
+<head data-page-node-id="LL25ctWOf69a4cQWeWt5sa">
+<meta charset="UTF-8" data-page-node-id="YZS1JuJvjvOkIMkHg09uC9">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="FuAfAfdJuTQKqY6WE4wLPx">
+<meta name="theme-color" content="#1E88E5" data-page-node-id="W9rpl1wV0dj61DAwvcN4Io">
 <title>东航直播间 · 航线速查 & 话术助手</title>
 <style>
 :root{
@@ -56,10 +56,27 @@ section.panel.active{display:block}
 .btn.primary:active{transform:scale(.98)}
 .btn.ghost{background:#fff;border:2px solid var(--pink-d);color:var(--purple)}
 .btn.yellow{background:linear-gradient(135deg,var(--yellow),var(--yellow-d));color:#5a3d00;font-size:13px;padding:9px 14px;min-height:40px}
-.search-actions{grid-column:1/-1;margin-top:2px}
+.search-actions{grid-column:1/-1;margin-top:2px;display:flex;gap:8px}
+.search-actions .btn.primary{flex:1;width:auto}
+.btn.clear{flex:0 0 auto;background:#fff;border:2px solid var(--line);color:var(--ink2);font-size:14px;padding:12px 14px}
+.btn.clear:hover{border-color:var(--purple);color:var(--purple)}
+.hist-box{margin:14px 0 2px}
+.hist-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;font-size:13px;font-weight:800;color:var(--purple)}
+.hist-clr{background:#fff;border:1.5px solid var(--line);color:var(--ink2);font-size:12px;font-weight:700;cursor:pointer;padding:5px 11px;border-radius:9px;min-height:30px;transition:.15s}
+.hist-clr:hover{background:#F1E9FF;color:var(--purple);border-color:var(--pink-d)}
+.hist-chips{display:flex;flex-wrap:wrap;gap:7px;min-height:24px;align-items:center}
+.hist-chip{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#F6EEFF,#EAF4FF);border:1.5px solid var(--pink-d);color:var(--blue-d);font-size:12.5px;font-weight:800;padding:6px 6px 6px 11px;border-radius:20px;cursor:pointer;transition:.15s;min-height:34px;user-select:none}
+.hist-chip:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(124,77,255,.22);border-color:var(--purple)}
+.hist-chip .cnt{background:var(--purple);color:#fff;font-size:11px;font-weight:800;min-width:19px;height:19px;line-height:19px;text-align:center;border-radius:10px;padding:0 5px;flex:0 0 auto}
+.hist-chip .del{width:20px;height:20px;line-height:17px;border-radius:50%;color:var(--ink2);font-size:15px;text-align:center;border:1px solid transparent;flex:0 0 auto}
+.hist-chip .del:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.hist-empty{font-size:12px;color:var(--ink2);opacity:.78}
 .result-meta{margin:14px 0 8px;font-size:13px;color:var(--ink2);font-weight:700}
 .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;
-  position:relative;overflow:hidden;border-left:6px solid var(--blue);box-shadow:0 3px 12px rgba(30,136,229,.06)}
+  position:relative;overflow:hidden;border-left:6px solid var(--blue);box-shadow:0 3px 12px rgba(30,136,229,.06);
+  animation:cardIn .28s ease both;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(30,136,229,.16)}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .card .lnk{position:absolute;right:12px;top:12px;background:linear-gradient(135deg,var(--pink-d),var(--purple));
   color:#fff;font-weight:800;font-size:12px;padding:5px 11px;border-radius:20px;box-shadow:0 3px 10px rgba(124,77,255,.3)}
 .card .pname{font-weight:800;font-size:15px;color:var(--blue-d);margin-right:92px;line-height:1.35}
@@ -231,80 +248,106 @@ footer{text-align:center;color:var(--ink2);font-size:11px;margin-top:26px;paddin
   border:1px dashed var(--line);border-radius:12px;padding:10px 12px}
 .voice-tip b{color:var(--purple)}
 
+/* 手机端语音引导（用键盘自带麦克风，系统级能力，不依赖在线识别） */
+.voice-mobile-guide{display:none;background:linear-gradient(135deg,#EAF4FF,#FFF6E6);border:1.5px solid var(--blue);
+  border-radius:12px;padding:11px 12px;margin:10px 0;text-align:left;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.voice-mobile-guide b{color:var(--blue-d)}
+.voice-mobile-guide .step{display:flex;align-items:flex-start;gap:8px;margin:6px 0}
+.voice-mobile-guide .num{flex:none;width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;
+  font-size:12px;font-weight:800;text-align:center;line-height:20px}
+body.is-mobile .voice-mobile-guide{display:block}
+.speak-again{display:none;align-items:center;gap:5px;margin:10px auto 0;padding:8px 16px;border:none;
+  border-radius:22px;background:linear-gradient(135deg,var(--green),var(--blue));color:#fff;
+  font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(30,80,140,.18)}
+body.is-mobile .speak-again{display:inline-flex}
+body.is-mobile .voice-btn{width:78px;height:78px;font-size:28px}
+body.is-mobile .vrow input{font-size:16px}
+
 </style>
 </head>
-<body data-page-node-id="DgLZCH9xYcvCbFIqKndbHI">
-<header class="top" data-page-node-id="ULZbGwYtik5YlSRlvGGMqH"><div class="inner" data-page-node-id="Vew5K9dDJO4qbxZlbf2MzP">
-  <div class="logo" data-page-node-id="TVAnz7rZUZ8RB1erPOs5AL">✈</div>
-  <div data-page-node-id="17K66RHA7hN3X1lgSUiSXA"><h1 data-page-node-id="5wxVJnTL2ecv53pUPMmNUx">东航直播间 · 航线速查 & 话术助手</h1><p data-page-node-id="AUmlCYGCm5bVE2gGZ0ybmR">输入始发 / 到达，秒出商品链接号 · 话术 / 城市推介一键查</p></div>
+<body data-page-node-id="PzMb9Nw1UWJiM0PeCJaTFS">
+<header class="top" data-page-node-id="1HEdu6cYtWgRQSTX8HXR2g"><div class="inner" data-page-node-id="DZTkXysls4DF2ulXjoHzXD">
+  <div class="logo" data-page-node-id="dcyCT9k8kl96rwMYKcLDJo">✈</div>
+  <div data-page-node-id="DvJBLJwtwANrJtWa1epZAo"><h1 data-page-node-id="8fvgvycAAU4KnIF8w4gn06">东航直播间 · 航线速查 & 话术助手</h1><p data-page-node-id="qEGsuZsQSWnOY3r2KniEfM">输入始发 / 到达，秒出商品链接号 · 话术 / 城市推介一键查</p></div>
 </div>
-<div class="stats" data-page-node-id="Pocz49ULbGGG8v6pmnNPm0">
-  <span data-page-node-id="T3oK6W5ReniuzgZrE5yuvt">📦 26 个产品</span><span data-page-node-id="5PhvxWkht08fyuvv3NLKpH">🔗 88 个商品链接</span><span data-page-node-id="ZCBmCNVqbkdyFPXbS54foU">✈️ 3150 条航线</span>
+<div class="stats" data-page-node-id="rCbd3M8tKjCQUggBhPgEvz">
+  <span data-page-node-id="l0D0BMiZHIx9aa71aI8aK9">📦 26 个产品</span><span data-page-node-id="gLTTY5HoCEH1NtdrQmCCqb">🔗 88 个商品链接</span><span data-page-node-id="axGtHkxVArxRqoQWALIjr7">✈️ 3150 条航线</span>
 </div>
-<div class="inner" data-page-node-id="EsSRTWkhzdBNf9drZp1rgE"><div class="tabs" data-page-node-id="NcCBVucNCQP4BlR2j3ChRz">
-  <div class="tab active" data-t="route" data-page-node-id="BS9RlyZQPr0EqHrYHUxFy5">🔍 航线速查</div>
-  <div class="tab" data-t="script" data-page-node-id="eZ3mmBMhD5NkDDgLyUKeTz">📣 话术速查</div>
-  <div class="tab" data-t="city" data-page-node-id="ATS30SHRzHH8iEz1tqZLIe">🏙 城市推介</div>
-  <div class="tab" data-t="voice" data-page-node-id="oqRRWil7tUsr2kiEOqRyAs">🎙 语音速查</div>
+<div class="inner" data-page-node-id="YGgy6ay9cwnXiTt5HRtrkf"><div class="tabs" data-page-node-id="M0Ztqa4xWEoJmFcsitr9Cf">
+  <div class="tab active" data-t="route" data-page-node-id="5O4IjVVUsXeK16AfaqFlZf">🔍 航线速查</div>
+  <div class="tab" data-t="script" data-page-node-id="bwjchCxIrR1UogEsrWn4Fs">📣 话术速查</div>
+  <div class="tab" data-t="city" data-page-node-id="SEpKBtXa94XFcEBZRqiXGc">🏙 城市推介</div>
+  <div class="tab" data-t="voice" data-page-node-id="QiC4tSvXkJDUF2bSDnOfB7">🎙 语音速查</div>
 </div></div>
 </header>
 
-<div class="wrap" data-page-node-id="CCfcH1TzyJXX8k2AL6LspA">
-<section class="panel active" id="panel-route" data-page-node-id="a3dT5DyokQS5qEtKEisqTg">
-  <div class="h2" data-page-node-id="4iItPcw7tdPaOdZB1w71mM"><span class="dot" data-page-node-id="05SzvbBK03k2KAwTmQrRHb"></span>航线速查 · 输入始发和到达地</div>
-  <div class="search-box" data-page-node-id="uDX2BUYpTFa4aK9d7xnhwA">
-    <div class="field" data-page-node-id="J4bhhzIoPxSPycSgS7wSqv"><label data-page-node-id="zNlY3ZLLLspIhhCK3CcwHD">始发地</label><input id="origin" list="citylist" placeholder="如：西安 / 上海 / 北京" autocomplete="off" data-page-node-id="FmJK8mKiWwCLdLbS7bVWTT"></div>
-    <div class="swap" data-page-node-id="58L6t7boF3OdxNeY0fGIzJ"><button class="btn ghost" id="swapBtn" title="交换始发/到达" data-page-node-id="RuPaSQRz7gskW4lsrDrOrw">⇄</button></div>
-    <div class="field" data-page-node-id="c9pSNBhQb7ecANtbFvlFmc"><label data-page-node-id="FVILy1Kxd8PZaw7tRUV18F">到达地</label><input id="dest" list="citylist" placeholder="如：北京 / 曼谷" autocomplete="off" data-page-node-id="Hphc2fOHD1zZiOXnE8D2e6"></div>
-    <div class="search-actions" data-page-node-id="gFlfHzQjwdBKQP0IqTLIrg"><button class="btn primary" id="searchBtn" data-page-node-id="ZgQcYVrdMui8NXT6uikbG7">🔍 查询推荐链接</button></div>
+<div class="wrap" data-page-node-id="SbgNRJJ8IbAI63iM5sf4BJ">
+<section class="panel active" id="panel-route" data-page-node-id="hG7Wwz2HCeCADGkOl64Hvd">
+  <div class="h2" data-page-node-id="D4qs7BpDzGpDooZc5A2LXP"><span class="dot" data-page-node-id="jZHbwADxApg3yDK4lYf3na"></span>航线速查 · 输入始发和到达地</div>
+  <div class="search-box" data-page-node-id="8dh1lWcEmrHCiwArGlbZZe">
+    <div class="field" data-page-node-id="CrGJ4mdT4TVTqlku4aTOLv"><label data-page-node-id="D6Jb3MEnJspvkK1LE5I41K">始发地</label><input id="origin" list="citylist" placeholder="如：西安 / 上海 / 北京" autocomplete="off" data-page-node-id="R2x5Lpis8wB8gLCB0DNrBP"></div>
+    <div class="swap" data-page-node-id="LxCk0JCTomac6zv5TJxn5H"><button class="btn ghost" id="swapBtn" title="交换始发/到达" data-page-node-id="6GxI6ZJNzRC7xsjqQGnR69">⇄</button></div>
+    <div class="field" data-page-node-id="Vd0K4m4DSpJOnlSyrZ2o7J"><label data-page-node-id="mqK9U46HtGWmOUZxDzhkrG">到达地</label><input id="dest" list="citylist" placeholder="如：北京 / 曼谷" autocomplete="off" data-page-node-id="uz35Hbjtf3oAuMfs9yp5Y8"></div>
+    <div class="search-actions" data-page-node-id="OH7XF1LQsFRLRIkfyNSzKi"><button class="btn primary" id="searchBtn" data-page-node-id="ctZpOn83UzZEkWiiyYCGOO">🔍 查询推荐链接</button><button class="btn clear" id="clearBtn" type="button" title="清空始发地、到达地与结果" data-page-node-id="OCgJ8nN8CVgE434fza7AzT">🧹 一键清空</button></div>
   </div>
-  <datalist id="citylist" data-page-node-id="foFzMiXhXe8wTCFhkftaQQ"></datalist>
-  <div id="result" data-page-node-id="CPpBjZFcIsl3nSWZlQ0253"></div>
+  <datalist id="citylist" data-page-node-id="mfuOX0Jq2ZWJh9QF9HHG7h"></datalist>
+  <div class="hist-box" data-page-node-id="uAbvhLdxfkEQDNP9pByTYv">
+    <div class="hist-hd" data-page-node-id="tiO8iEr6ZOwzH810m48GeB"><span data-page-node-id="YQNpGeSil0dwjbCiFE2BPx">🕘 高频搜索历史 · 点一下直接查（自动保留最常查的 8 条）</span><button class="hist-clr" id="histClearBtn" type="button" title="清空全部历史" data-page-node-id="IzcqVW3WLAADJusglJ2MW9">清空历史</button></div>
+    <div class="hist-chips" id="histChips" data-page-node-id="UMy9OL81Ct07iC9CRGAJtd"></div>
+  </div>
+  <div id="result" data-page-node-id="JICKQNVIMTYGwEfQcWtWWs"></div>
 
-  <div class="overview" data-page-node-id="M4JtxHqJWAR6xBCbNEv51t">
-    <div class="h2" data-page-node-id="U4Wh8YBfrb61EAxFX1k1i4"><span class="dot" data-page-node-id="uvFj3y94IsTgtzXLiEPLCk"></span>全部商品链接总览（88 个）</div>
-    <div class="ov-index" id="ovIndex" data-page-node-id="9Z2Dbs795IpluZ5lcsPqaA"></div>
-    <div id="ovGroups" data-page-node-id="PLO3ukJRX1RWvaRNOBsa3G"></div>
+  <div class="overview" data-page-node-id="LnDxwxbKn3mihVqwhB2pOL">
+    <div class="h2" data-page-node-id="4BxAfe6IpFiztXEQj9FBJ1"><span class="dot" data-page-node-id="WbsCnHG3DpdB1VUJqkTfOF"></span>全部商品链接总览（88 个）</div>
+    <div class="ov-index" id="ovIndex" data-page-node-id="MqytYTUl3UnxGuU8LduFH7"></div>
+    <div id="ovGroups" data-page-node-id="Gjimq7s0OfOtIDrsAUbyUK"></div>
   </div>
 </section>
 
-<section class="panel" id="panel-script" data-page-node-id="VdyXqUcSf5QeRYGTEQ0Gd9">
-  <div class="h2" data-page-node-id="YUQtecSetXKwCH4RN6B4Q6"><span class="dot" data-page-node-id="4xoUPYVdQV3HCybXG9P6Ft"></span>直播间通用话术速查</div>
-  <div class="filter" data-page-node-id="VFjEGcxWmfzL9jW9NJeAdJ"><input id="scriptFilter" placeholder="🔎 输入关键词快速定位话术，如：退款 / 兑换 / 宠物 / 行李" data-page-node-id="0F85VSgxWW4vnzTVjiIrqX"></div>
-  <div id="scriptBox" data-page-node-id="cM0TdEtz2idY5RPHtXr5T3"></div>
+<section class="panel" id="panel-script" data-page-node-id="hTs8HZ3CFLm0pOvdX5LkWT">
+  <div class="h2" data-page-node-id="YVvm2EG7oP4DbykFOTF7ob"><span class="dot" data-page-node-id="wMqSd8OCR8Ip6Of3nQjptA"></span>直播间通用话术速查</div>
+  <div class="filter" data-page-node-id="qVZUCuxmOTKYw13pLgGCCD"><input id="scriptFilter" placeholder="🔎 输入关键词快速定位话术，如：退款 / 兑换 / 宠物 / 行李" data-page-node-id="wxlMeSCtLHZArPsc1ryqPB"></div>
+  <div id="scriptBox" data-page-node-id="yAX7YBA2LKsmAq8AzhSqkE"></div>
 </section>
 
-<section class="panel" id="panel-city" data-page-node-id="VlIBOlbOVfVo5h2TyC3qhe">
-  <div class="h2" data-page-node-id="nFDSLoU1o5i54cgCRfSHVI"><span class="dot" data-page-node-id="B0DHtd2pNaOrv81Q1FAXED"></span>城市推介 · 搜索城市出话术与热门航线</div>
-  <div class="city-search" data-page-node-id="5iwEPBmopXmFKSSwmCCq72"><input id="citySearch" list="citylist" placeholder="🔎 输入城市名，如：西安 / 成都 / 曼谷 / 泉州" autocomplete="off" data-page-node-id="eAFnhXRAiKomcOLM9WMG5l"></div>
-  <div id="cityFocus" data-page-node-id="tF2Xcom2yp1TUg0sIg4oKP"></div>
-  <div class="h2" style="margin-top:20px" data-page-node-id="QwDJaLS9mggjKhs31ctJWa"><span class="dot" data-page-node-id="gndErEHIyBoXgKieQFKeJX"></span>高频城市一览</div>
-  <div class="city-grid" id="cityGrid" data-page-node-id="mjnzURRePZ0thUBSECjhw8"></div>
+<section class="panel" id="panel-city" data-page-node-id="cDFxLSgIBf4SLYzeda5uiS">
+  <div class="h2" data-page-node-id="xJda6RQrH16GcaiyNXXBDN"><span class="dot" data-page-node-id="uKV6avoYdDbcZqycJX9l5D"></span>城市推介 · 搜索城市出话术与热门航线</div>
+  <div class="city-search" data-page-node-id="AHrCcHZxgzR9gHj5AoyneH"><input id="citySearch" list="citylist" placeholder="🔎 输入城市名，如：西安 / 成都 / 曼谷 / 泉州" autocomplete="off" data-page-node-id="u1pkrTcsAnohHGuiuAa5mG"></div>
+  <div id="cityFocus" data-page-node-id="86ZBgFmmudICqkyIqOdZYO"></div>
+  <div class="h2" style="margin-top:20px" data-page-node-id="MGH7AlHBZFm6jdjJNbBFML"><span class="dot" data-page-node-id="EchlNIHg0Wkz0dToGzwd26"></span>高频城市一览</div>
+  <div class="city-grid" id="cityGrid" data-page-node-id="ECwf0OI114SKpCw7CGHBFp"></div>
 </section>
 
 
-<section class="panel" id="panel-voice" data-page-node-id="Nb9VPFKG3OayX4BjtbrIdZ">
-  <div class="h2" data-page-node-id="xwzEf6VirXEIQq98efw2p4"><span class="dot" data-page-node-id="UaROwcwG0BGgibZcTAp0Ic"></span>语音速查 · 说出「哪里到哪里在几号链接」</div>
-  <div class="voice-box" data-page-node-id="vVFuFKF9BC5N5DKnnIHFNX">
-    <button class="voice-btn" id="voiceBtn" title="点击开始/停止聆听" data-page-node-id="RivB80FfV7SGQ0EkIXVyoR">🎙</button>
-    <div class="voice-status" id="voiceStatus" data-page-node-id="9iyKfq6TWISz0oYAjGqdlG">点击麦克风开始语音识别</div>
-    <div class="voice-heard" id="voiceHeard" data-page-node-id="dqV1KaY6bZQAYU4BrdpTP4">（识别到的内容会显示在这里）</div>
-    <div class="vrow" data-page-node-id="OYURddLsIeqGxO7eIc6G8a">
-      <input id="voiceText" placeholder="或直接输入：西安到北京在几号链接" autocomplete="off" data-page-node-id="Dlru2cfZHL5MtqevAmuB7l">
-      <button class="btn primary" id="voiceAsk" style="width:auto" data-page-node-id="ifZUgY1udOfkD1Q0jlZBg2">解析</button>
+<section class="panel" id="panel-voice" data-page-node-id="906Avmbvn7TwuR7BWXPu2k">
+  <div class="h2" data-page-node-id="a92zAz6dEAbCTlmasXtlYr"><span class="dot" data-page-node-id="AUaNDMhIKJVRzsAzlUV0mf"></span>语音速查 · 说出「哪里到哪里在几号链接」</div>
+  <div class="voice-box" data-page-node-id="rGOTImDG7131CZMi9hgQET">
+    <button class="voice-btn" id="voiceBtn" title="点击开始/停止聆听" data-page-node-id="1uhjEh1eseLDkzCDqHl3hh">🎙</button>
+    <div class="voice-status" id="voiceStatus" data-page-node-id="FYwAP5gontfmouCOsW815A">点击麦克风开始语音识别</div>
+    <div class="voice-heard" id="voiceHeard" data-page-node-id="4o6v10wAwf4v1OFTgdJWjj">（识别到的内容会显示在这里）</div>
+    <div class="vrow" data-page-node-id="3wzZpOIqmjQYCrptKkaQHG">
+      <input id="voiceText" placeholder="或直接输入：西安到北京在几号链接" autocomplete="off" data-page-node-id="a2pYZSokGvW2yNd5AEW5eC">
+      <button class="btn primary" id="voiceAsk" style="width:auto" data-page-node-id="qVYzd6MzzQAhGYMBe3SDcp">解析</button>
     </div>
-    <label class="vswitch" data-page-node-id="z52ETTZLkiqCW9tdfmgydi"><input type="checkbox" id="voiceAuto" checked data-page-node-id="o7CW1lrVte8xs1QOXvZI5J"> 自动语音播报答案</label>
+    <label class="vswitch" data-page-node-id="GHpKucPpJmv8Dn0cPkFVJc"><input type="checkbox" id="voiceAuto" checked data-page-node-id="SD8KyiTWDfUxFB0J2E8a1W"> 自动语音播报答案</label>
+    <button class="speak-again" id="voiceSpeakAgain" type="button" data-page-node-id="O0pKdKwDlgLXvyXLxUSjRR">🔊 再听一遍答案</button>
   </div>
-  <div class="voice-answer" id="voiceAnswer" data-page-node-id="Uvc6Yp1r2vmFreK9m0bnYJ"></div>
-  <div id="voiceResults" data-page-node-id="WXQkgHkMpDeEVQbjaJamdX"></div>
-  <div class="voice-tip" data-page-node-id="TRofb90cGiOJ183aAjQC0D">
-    <b data-page-node-id="7ABKKQXDTgm8zKAbudzMMe">使用说明：</b>点击麦克风说出航线，例如「西安到北京在几号链接」「上海飞曼谷几个链接」「5号链接是什么产品」，
-    程序会自动抓取城市 / 链接号并回应。<b data-page-node-id="v9fBwEHP5hT5EViHLar8kH">点开下方结果</b>可查看产品具体名称、价格、链接号与目的地推介话术。
-    <b data-page-node-id="HDwXMKqP8WHUfnao3wOVGy">文字兜底：</b>若浏览器不支持语音识别或网络不可用，直接在上方输入框输入同样的话，点击「解析」即可。
+  <div class="voice-mobile-guide" id="voiceMobileGuide" data-page-node-id="td8657o6mZLeb0bfWRkQ1l">
+    <div class="step" data-page-node-id="UyOrHmijq5plCQC0FVUUFn"><span class="num" data-page-node-id="9oriRHXHj687V7WdHQtX8q">1</span><span data-page-node-id="R81WxFNgk7RDasoqKGzoJT">点下方<b data-page-node-id="b1krrhhsovbCVbN5gUnEna">输入框</b>调出手机键盘</span></div>
+    <div class="step" data-page-node-id="7sxINUyDGJ88ERzfldElG4"><span class="num" data-page-node-id="AYonGg8BJRvt0WzY5n0W3S">2</span><span data-page-node-id="rF6MsAka7oA9DCHUHMenZ6">点键盘上的 <b data-page-node-id="5mhag046LbKafVsA2NSRHN">🎤 语音输入</b>，说出「西安到北京在几号链接」</span></div>
+    <div class="step" data-page-node-id="C5jrmPJGBkNQ9HzsElFr4x"><span class="num" data-page-node-id="3wrpLHTUKEuFFeSe2bfepw">3</span><span data-page-node-id="2sYKXzbs7xAvkj2xRiBPhQ">说完自动解析并播报，也可点「解析」按钮</span></div>
+  </div>
+  <div class="voice-answer" id="voiceAnswer" data-page-node-id="Bq9hknHfByWU5njTiHNPBm"></div>
+  <div id="voiceResults" data-page-node-id="LpBaxXerHNJu6Q7GOHFurl"></div>
+  <div class="voice-tip" data-page-node-id="Zb2C22Gec0MyibX58hg9lB">
+    <b data-page-node-id="zxNPl9ytjnoU6rr1bgGdLx">使用说明：</b>说出航线，例如「西安到北京在几号链接」「上海飞曼谷几个链接」「5号链接是什么产品」，
+    程序会自动抓取城市 / 链接号并回应。<b data-page-node-id="AtyyI9cZ2XNuYEsXhR1cBq">点开下方结果</b>可查看产品具体名称、价格、链接号与目的地推介话术。
+    <b data-page-node-id="fraeF5qOpgCaAjF52AVVoU">电脑：</b>点上方麦克风直接说话。<b data-page-node-id="7OW3THI5qbeqjyim7V5Xsg">手机：</b>点输入框后用键盘里的 🎤 语音输入（自动解析）。
+    若自动播报没出声（部分手机浏览器限制），点「🔊 再听一遍答案」即可。
   </div>
 </section>
 
-<footer data-page-node-id="9ZJMEnvYmhDYkst0w7nwHj">数据基于直播间航线表与通用话术整理 · 最终以兑换专区实时可兑为准。</footer>
+<footer data-page-node-id="3jP1tBuyv638aGCSIvIDWo">数据基于直播间航线表与通用话术整理 · 最终以兑换专区实时可兑为准。</footer>
 </div>
 
 <script>
@@ -390,7 +433,11 @@ prodOrder.forEach(function(pi){ prodLinks[pi].sort(function(a,b){return a-b;}); 
     nums.forEach(function(k){
       var L=DATA.links[k], rs=linkRoutes[k]||[];
       var rh='';
-      rs.forEach(function(r){ rh+='<div class="ri">'+r.o+' <b>→</b> '+r.d+'</div>'; });
+      // 按始发城市拼音首字母排序，首字母相同再按到达城市拼音排序
+      rs.slice().sort(function(a,b){
+        var c=(a.oc||a.o||'').localeCompare(b.oc||b.o||'','zh-CN');
+        return c!==0 ? c : (a.dc||a.d||'').localeCompare(b.dc||b.d||'','zh-CN');
+      }).forEach(function(r){ rh+='<div class="ri">'+r.o+' <b>→</b> '+r.d+'</div>'; });
       h+='<details class="ov"><summary><span class="num">'+k+'</span>'+
         '<span class="oname">'+DATA.products[L.pi]+'</span>'+
         '<span class="pr">'+L.pr+'</span>'+
@@ -413,6 +460,7 @@ function doSearch(){
     box.innerHTML='<div class="empty">未找到「'+oq+' → '+dq+'」的航线，请检查城市名或调整始发 / 到达后重试。</div>';
     return;
   }
+  recordHist(oq,dq);
   var byLink={};
   hits.forEach(function(r){ (byLink[r.l]=byLink[r.l]||[]).push(r); });
   var links=Object.keys(byLink).map(Number).sort(function(a,b){return a-b;});
@@ -428,6 +476,68 @@ function doSearch(){
 el('searchBtn').addEventListener('click',doSearch);
 ['origin','dest'].forEach(function(id){ el(id).addEventListener('keydown',function(e){ if(e.key==='Enter') doSearch(); }); });
 el('swapBtn').addEventListener('click',function(){ var a=el('origin').value; el('origin').value=el('dest').value; el('dest').value=a; doSearch(); });
+
+// ---------- 一键清空 ----------
+el('clearBtn').addEventListener('click',function(){
+  el('origin').value=''; el('dest').value=''; el('result').innerHTML='';
+  el('origin').focus();
+});
+
+// ---------- 高频搜索历史（最多 8 条，按次数排序，localStorage 持久化） ----------
+var HIST_KEY='dh_route_hist_v1', HIST_MAX=8, histArr=[];
+try{ histArr=JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); if(!Array.isArray(histArr)) histArr=[]; }catch(e){ histArr=[]; }
+function saveHist(){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(histArr)); }catch(e){} }
+function renderHist(){
+  var box=el('histChips'); if(!box) return;
+  if(!histArr.length){ box.innerHTML='<span class="hist-empty">还没有搜索记录，查一次航线就会自动记下来～</span>'; return; }
+  var h='';
+  histArr.slice().sort(function(a,b){ return (b.c||0)-(a.c||0); }).forEach(function(it,idx){
+    h+='<span class="hist-chip" data-o="'+escHtml(it.o)+'" data-d="'+escHtml(it.d)+'" data-i="'+idx+'">'+escHtml(it.o)+
+       ' <b style="color:var(--red)">→</b> '+escHtml(it.d)+
+       '<span class="cnt">'+(it.c||1)+'</span>'+
+       '<span class="del" title="删除这条" data-del="'+idx+'">×</span></span>';
+  });
+  box.innerHTML=h;
+}
+function recordHist(o,d){
+  if(!o||!d) return;
+  var found=null;
+  for(var i=0;i<histArr.length;i++){ if(histArr[i].o===o && histArr[i].d===d){ found=histArr[i]; break; } }
+  if(found){ found.c=(found.c||1)+1; }
+  else { histArr.push({o:o,d:d,c:1}); }
+  // 按次数降序，保留前 8 条
+  histArr.sort(function(a,b){ return (b.c||0)-(a.c||0); });
+  if(histArr.length>HIST_MAX) histArr.length=HIST_MAX;
+  saveHist(); renderHist();
+}
+(function bindHist(){
+  var box=el('histChips');
+  if(box){
+    box.addEventListener('click',function(e){
+      var del=e.target.getAttribute && e.target.getAttribute('data-del');
+      if(del!==null && del!==undefined){
+        e.stopPropagation();
+        // data-i 是排序后展示的序号，需映射回 histArr 中按次数排序后的对应项
+        var sorted=histArr.slice().sort(function(a,b){ return (b.c||0)-(a.c||0); });
+        var target=sorted[Number(del)];
+        if(target){
+          histArr=histArr.filter(function(it){ return !(it.o===target.o && it.d===target.d); });
+          saveHist(); renderHist();
+        }
+        return;
+      }
+      var chip=e.target.closest ? e.target.closest('.hist-chip') : null;
+      if(!chip) return;
+      var o=chip.getAttribute('data-o'), dd=chip.getAttribute('data-d');
+      if(o===null||dd===null) return;
+      el('origin').value=o; el('dest').value=dd;
+      doSearch(); window.scrollTo({top:0,behavior:'smooth'});
+    });
+  }
+  var clr=el('histClearBtn');
+  if(clr){ clr.addEventListener('click',function(){ histArr=[]; saveHist(); renderHist(); }); }
+  renderHist();
+})();
 
 // ---------- script (原文不改，仅对关键短语做视觉标注) ----------
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -560,15 +670,27 @@ var VOICE_PITCH_MULTI={"上海": {"玩法": "外滩万国建筑群与陆家嘴�
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var synth = window.speechSynthesis;
   var btn=el('voiceBtn'), statusEl=el('voiceStatus'), heardEl=el('voiceHeard'),
-      txtEl=el('voiceText'), ansEl=el('voiceAnswer'), resEl=el('voiceResults'), autoEl=el('voiceAuto');
-  var recog=null, listening=false, finalText='';
+      txtEl=el('voiceText'), ansEl=el('voiceAnswer'), resEl=el('voiceResults'), autoEl=el('voiceAuto'),
+      againEl=el('voiceSpeakAgain');
+  var recog=null, listening=false, finalText='', lastSpeak='';
   var MULTI = (typeof VOICE_PITCH_MULTI!=='undefined')?VOICE_PITCH_MULTI:{};
+  // 移动端 / 微信内置浏览器：系统 Web Speech 识别基本不可用，改走「键盘麦克风 + 文字解析」
+  var ua=navigator.userAgent||'';
+  var isMobile=/Android|iPhone|iPad|iPod|Mobile|MicroMessenger|Weixin/i.test(ua);
+  if(isMobile){ try{document.body.classList.add('is-mobile');}catch(e){} }
 
   function setStatus(t,cls){ statusEl.textContent=t; }
   function speak(t){
-    if(!synth){ setStatus('当前浏览器不支持语音播报'); return; }
-    try{ synth.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=1.05; u.pitch=1; synth.speak(u); }
-    catch(e){ setStatus('语音播报失败：'+e.message); }
+    lastSpeak=t||'';
+    if(!synth){ return; }
+    try{
+      synth.cancel();
+      var u=new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=1.05; u.pitch=1;
+      // 部分手机浏览器首次发声需用户手势内触发；用静默 utterance 预热
+      try{ var warm=new SpeechSynthesisUtterance(''); warm.volume=0; synth.speak(warm); }catch(e){}
+      synth.speak(u);
+    }
+    catch(e){ /* 播报失败不影响解析结果，靠「再听一遍」兜底 */ }
   }
 
   // ---- 中文数字 ----
@@ -794,7 +916,15 @@ var VOICE_PITCH_MULTI={"上海": {"玩法": "外滩万国建筑群与陆家嘴�
     finalText='';
   }
 
-  if(SR){
+  // 让麦克风按钮/状态在移动端走「聚焦输入框 + 键盘麦克风」引导
+  function mobileGuide(msg){
+    txtEl.focus();
+    try{ txtEl.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+    setStatus(msg||'现在点手机键盘上的 🎤 说话');
+    heardEl.textContent='（说完后会自动解析）';
+  }
+
+  if(SR && !isMobile){
     recog=new SR();
     recog.lang='zh-CN'; recog.continuous=false; recog.interimResults=true; recog.maxAlternatives=1;
     recog.onstart=function(){ listening=true; btn.classList.add('listening'); setStatus('🎙 正在聆听…说完请停顿'); finalText=''; heardEl.textContent='（聆听中…）'; };
@@ -808,8 +938,22 @@ var VOICE_PITCH_MULTI={"上海": {"玩法": "外滩万国建筑群与陆家嘴�
       heardEl.textContent='🎧 '+(finalText||interim||'…');
     };
     recog.onerror=function(e){
-      setStatus('识别出错：'+e.error+(e.error==='network'?'（网络不可用，请用文字输入）':''));
       listening=false; btn.classList.remove('listening');
+      // 语音服务被禁用（service-not-allowed / not-allowed，国内网络/微信常见）→ 彻底降级到键盘输入
+      if(e.error==='service-not-allowed'||e.error==='not-allowed'){
+        try{ recog.abort(); }catch(err){}
+        try{
+          var nb=btn.cloneNode(true); btn.parentNode.replaceChild(nb,btn);
+          nb.textContent='⌨️'; nb.title='点此调出输入框，用手机键盘的语音输入';
+          nb.addEventListener('click',function(){ mobileGuide(); });
+        }catch(err){}
+        try{ document.body.classList.add('is-mobile'); }catch(err){}
+        setStatus('语音服务不可用，已切换为键盘语音输入');
+        heardEl.textContent='（点下方输入框，用键盘 🎤 说话）';
+        txtEl.focus();
+      } else {
+        setStatus('识别出错：'+e.error+(e.error==='network'?'（网络不可用，请用文字输入）':''));
+      }
     };
     recog.onend=function(){
       listening=false; btn.classList.remove('listening');
@@ -819,15 +963,33 @@ var VOICE_PITCH_MULTI={"上海": {"玩法": "外滩万国建筑群与陆家嘴�
     btn.addEventListener('click',function(){
       if(listening){ try{recog.stop();}catch(e){} return; }
       try{ synth&&synth.cancel(); recog.start(); }
-      catch(e){ setStatus('无法启动识别：'+e.message); }
+      catch(e){ setStatus('无法启动识别：'+e.message+'，请用文字输入'); }
     });
+  } else if(isMobile){
+    // 手机端：麦克风按钮改为引导到输入框（用键盘自带语音输入）
+    btn.textContent='⌨️';
+    btn.title='点此调出输入框，用手机键盘的语音输入';
+    btn.addEventListener('click',function(){ mobileGuide(); });
+    setStatus('点输入框，用键盘 🎤 说话');
   } else {
+    // 电脑端且浏览器不支持识别
     btn.disabled=true; btn.style.opacity='.5'; btn.textContent='🔇';
     setStatus('当前浏览器不支持语音识别，请用下方文字输入');
   }
 
   el('voiceAsk').addEventListener('click',ask);
   txtEl.addEventListener('keydown',function(e){ if(e.key==='Enter') ask(); });
+  // 手机键盘语音输入结束通常会触发 input/change；防抖后自动解析并播报
+  var debounce=null;
+  function autoAsk(){
+    var v=txtEl.value.trim(); if(!v) return;
+    heardEl.textContent='🎧 '+v;
+    clearTimeout(debounce);
+    debounce=setTimeout(function(){ setStatus('已识别，正在解析…'); ask(); }, 700);
+  }
+  txtEl.addEventListener('input',function(){ if(isMobile) autoAsk(); });
+  txtEl.addEventListener('change',function(){ if(isMobile) autoAsk(); });
+  if(againEl) againEl.addEventListener('click',function(){ if(lastSpeak) speak(lastSpeak); else setStatus('还没有可播报的答案'); });
 })();
 
 </script>
